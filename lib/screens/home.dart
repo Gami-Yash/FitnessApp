@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, sized_box_for_whitespace, unnecessary_import, unused_local_variable, sort_child_properties_last
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fadable_app_bar/fadable_app_bar.dart';
+import 'package:flutter/widgets.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class Home extends StatelessWidget {
@@ -117,43 +119,96 @@ class SearchBar extends StatelessWidget {
   }
 }
 
-class HorizontalSwiper extends StatelessWidget {
+
+
+class HorizontalSwiper extends StatefulWidget {
   const HorizontalSwiper({Key? key}) : super(key: key);
 
   @override
+  _HorizontalSwiperState createState() => _HorizontalSwiperState();
+}
+
+class _HorizontalSwiperState extends State<HorizontalSwiper> {
+  int currentIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return VxSwiper.builder(
-      itemCount: 4,
-      height: 200, // Set the height of the swiper
-      viewportFraction: 0.8,
-      enlargeCenterPage: true, // Enlarge the center page
-      aspectRatio: 16 / 9, // Set the aspect ratio
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          width: 200,
-          margin: EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.circle, color: Colors.red), // Red circle icon
-              SizedBox(height: 8),
-              Text(
-                '2 Memberships expiring today',
-                style: TextStyle(fontWeight: FontWeight.bold),
+    return Column(
+      children: [
+        VxSwiper.builder(
+          itemCount: 4,
+          height: 100,
+          viewportFraction: 1.0,
+          enlargeCenterPage: true,
+          aspectRatio: 16 / 9,
+          onPageChanged: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              width: 400,
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(10),
               ),
-              SizedBox(height: 4),
-              Text('Remind them now >>>'),
-            ],
-          ),
-        );
-      },
+              alignment: Alignment.center,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20), // Add padding from the top
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(width: 30,),
+                        Icon(Icons.warning,
+                            size: 50, // Increase the size of the icon
+                            color: index == currentIndex ? Colors.blue : Colors.grey),
+                        SizedBox(width: 16),
+                        Text(
+                          '2 Memberships expiring today',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(width: 16),
+                        Text(
+                          '${index + 1}/4',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text('Remind them now >>>'),
+                      ...List.generate(4, (dotIndex) {
+                        return Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: dotIndex == index ? Colors.blue : Colors.grey,
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        )
+      ],
     );
   }
 }
+
 
 
