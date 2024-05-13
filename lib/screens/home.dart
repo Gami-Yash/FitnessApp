@@ -5,8 +5,13 @@ import 'package:fadable_app_bar/fadable_app_bar.dart';
 import 'package:flutter/widgets.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -17,41 +22,87 @@ class Home extends StatelessWidget {
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: MyAppBar(scrollController: _controller),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SearchBar(),
-          SizedBox(height: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                HorizontalSwiper(),
-                SizedBox(height: 16),
-                Text(
-                  "Quick Action",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.black,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SearchBar(),
+            SizedBox(height: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  HorizontalSwiper(),
+                  SizedBox(height: 16),
+                  Text(
+                    "Quick Action",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                SizedBox(height: 8),
-                buildQuickActionButtons(),
-                SizedBox(height: 0),
-                buildOverviewAndDropDown(),
-                SizedBox(height: 0),
-                buildDataBoxes(),
-                Text("View All"),
-
-              ],
+                  SizedBox(height: 8),
+                  buildQuickActionButtons(),
+                  SizedBox(height: 0),
+                  buildOverviewAndDropDown(),
+                  SizedBox(height: 0),
+                  buildDataBoxes(),
+                  Text("View All"),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+      bottomNavigationBar: buildBottomNavigationBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          // Add your navigation logic here
+        },
       ),
     );
   }
 }
+
+Widget buildBottomNavigationBar(
+    {required int selectedIndex, required Function(int) onItemTapped}) {
+  return BottomNavigationBar(
+    currentIndex: selectedIndex,
+    onTap: onItemTapped,
+    selectedItemColor: Colors.black, // Set selected item color
+    unselectedItemColor: Colors.black, // Set unselected item color
+    items: const <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.people),
+        label: 'Members',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.insights),
+        label: 'Insights',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.manage_accounts),
+        label: 'Manage',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Profile',
+      ),
+    ],
+  );
+}
+
+
+// Other widget functions...
+
 
 
 
@@ -343,6 +394,7 @@ Widget buildOverviewAndDropDown() {
   );
 }
 
+
 Widget buildDataBoxes() {
   return Padding(
     padding: const EdgeInsets.all(16.0),
@@ -368,8 +420,6 @@ Widget buildDataBoxes() {
     ),
   );
 }
-
-
 Widget buildDataBox(String title, String value, IconData icon, Color color, {bool isMenu = false}) {
   return Container(
     width: 150,
@@ -412,9 +462,3 @@ Widget buildDataBox(String title, String value, IconData icon, Color color, {boo
     ),
   );
 }
-
-
-
-
-
-
